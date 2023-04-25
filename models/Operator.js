@@ -1,0 +1,73 @@
+module.exports = (sequelize, Sequelize) => {
+    const Operator = sequelize.define("Operator", {
+        operatorId: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            primaryKey: true
+        },
+        firstName: {
+            type: Sequelize.STRING,
+            allowNull: false
+        },
+        lastName: {
+            type: Sequelize.STRING,
+            allowNull: false
+        },
+        phoneNumber: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            validate: {
+                len: 11
+            }
+        },
+        nationality: {
+            type: Sequelize.STRING,
+            allowNull: false
+        },
+        state: {
+            type: Sequelize.STRING,
+            allowNull: false
+        },
+        localGovernmentArea: {
+            type: Sequelize.STRING,
+            allowNull: false
+        },
+        sex: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            validate: {
+                isIn: [['male', 'female']]
+            }
+        },
+        dateOfBirth: {
+            type: Sequelize.DATEONLY,
+            allowNull: false
+        },
+        identificationNumber: {
+            type: Sequelize.STRING,
+            allowNull: false
+        },
+        profilePic: {
+            type: Sequelize.STRING
+        },
+        userId: {
+            type: Sequelize.INTEGER
+        }
+    })
+
+    Operator.associate = function(model) {
+        Operator.belongsTo(model.user, {
+            "foreignKey": "userId",
+            "onDelete": "cascade"
+        })
+    }
+
+    Operator.associate = function(model) {
+        Operator.hasMany(model.product, {
+            "foreignKey": "operatorId",
+            "onDelete": "cascade"
+        })
+    }
+
+    return Operator
+}
