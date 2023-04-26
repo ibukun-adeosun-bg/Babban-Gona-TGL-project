@@ -15,13 +15,14 @@ const verifyToken = async (req, res, next) => {
             }
         )
     } else {
-        res.status(401).json("You are not Authorized to do this")
+        res.status(401).json("You are not Authenticated Yet")
     }
 }
 
 const verifyUser = async (req, res, next) => {
     verifyToken(req, res, () => {
-        if(req.user.id === parseInt(req.params.id)) {
+        console.log(req.user.username, req.params.username);
+        if(req.user.username === req.params.username) {
             next();
         } else {
             res.status(401).json("You are not Authorized to do this")
@@ -34,7 +35,7 @@ const verifyAdmin = async (req, res, next) => {
         if(req.user.isAdmin) {
             next();
         } else {
-            res.status(401).json("You are not Authorized to do this")
+            res.status(401).json("You are not an Admin, so you are not Authorized to do this")
         }
     })
 }

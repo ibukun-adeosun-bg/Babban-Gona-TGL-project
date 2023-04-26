@@ -1,4 +1,5 @@
 const db = require("../config/dbConfig")
+const bcrypt = require("bcryptjs")
 
 //GET A USER
 const getUser = async (req, res, next) => {
@@ -14,7 +15,6 @@ const getUser = async (req, res, next) => {
 //GET ALL USERS
 const getAllUsers = async (req, res, next) => {
     try {
-        const username = req.params.username
         const users = await db.user.findAll({})
         res.status(200).json(users)
     } catch (err) {
@@ -24,6 +24,10 @@ const getAllUsers = async (req, res, next) => {
 
 //UPDATE USER INFORMATION
 const updateUser = async (req, res, next) => {
+    if(req.body.password) {
+        const salt = bcrypt.genSaltSync(10)
+        req.body.password = bcrypt.hashSync(req.body.password, salt)
+    }
     try {
         const username = req.params.username
         await db.user.update(req.body, { where: { username: username }})

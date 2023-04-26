@@ -1,4 +1,14 @@
+const NigeriaStatesLGAs = require("nigeria-states-lgas");
+const { createError } = require("../middleware/error");
+
 module.exports = (sequelize, Sequelize) => {
+    const statesLGAs = {}
+    const validStates = NigeriaStatesLGAs.states()
+    validStates.forEach(state => {
+        const lgas = NigeriaStatesLGAs.lgas(state);
+        statesLGAs[state] = lgas;
+    });
+    
     const Operator = sequelize.define("Operator", {
         operatorId: {
             type: Sequelize.STRING,
@@ -22,15 +32,35 @@ module.exports = (sequelize, Sequelize) => {
         },
         nationality: {
             type: Sequelize.STRING,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                isIn: [['Nigeria']]
+            }
         },
         state: {
             type: Sequelize.STRING,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+                async validState(state) {
+                    if (!validStates.includes(state)) {
+                        throw new Error("Invalid State")
+                    }
+                }
+            }
         },
         localGovernmentArea: {
             type: Sequelize.STRING,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                notEmpty: true,
+                async validLGA(lga) {
+                    const state = this.state
+                    if (!statesLGAs[state].includes(lga)) {
+                        throw new Error("Invalid Local Government Area")
+                    }
+                }
+            }
         },
         sex: {
             type: Sequelize.STRING,
@@ -45,7 +75,10 @@ module.exports = (sequelize, Sequelize) => {
         },
         identificationNumber: {
             type: Sequelize.STRING,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                len: 11
+            }
         },
         profilePic: {
             type: Sequelize.STRING

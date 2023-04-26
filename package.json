@@ -20,10 +20,14 @@
   "homepage": "https://github.com/ibukun-adeosun-bg/Babban-Gona-TGL-project#readme",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "helmet": "^6.1.5",
     "jsonwebtoken": "^9.0.0",
+    "morgan": "^1.10.0",
     "mysql2": "^3.2.3",
+    "nigeria-states-lgas": "^0.0.2",
     "sequelize": "^6.31.0"
   },
   "devDependencies": {
