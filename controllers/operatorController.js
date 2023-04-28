@@ -10,6 +10,9 @@ const createOperator = async (req, res, next) => {
         } else if (!stateLGAs[req.body.state].includes(req.body.localGovernmentArea)) {
             next(createError(403, "Invalid Local Government Area"))
         } else {
+            if (req.file) {
+                req.body.profilePic = req.file.filename
+            }
             const info = {
                 operatorId: req.body.operatorId,
                 firstName: req.body.firstName,

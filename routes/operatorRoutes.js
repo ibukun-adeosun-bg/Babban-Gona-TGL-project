@@ -7,7 +7,7 @@ const { createOperator, getOperator, getAllOperators, updateOperator, deleteOper
 const router = express.Router()
 
 //CREATE AN OPERATOR
-router.post("/:username/operators", upload.single("file"), bodyParser.urlencoded({ extended: true }), verifyUser, createOperator)
+router.post("/:username/operators", upload.single("profilePic"), bodyParser.urlencoded({ extended: true }), verifyUser, createOperator)
 
 //GET AN OPERATOR
 router.get("/:username/operators/:operatorId", verifyUser || verifyAdmin, getOperator)
@@ -16,7 +16,7 @@ router.get("/:username/operators/:operatorId", verifyUser || verifyAdmin, getOpe
 router.get("/:username/operators", verifyAdmin, getAllOperators)
 
 //UPDATE OPERATOR INFORMATION
-router.put("/:username/operators/:operatorId", upload.single("file"), bodyParser.urlencoded({ extended: true }), verifyUser || verifyAdmin, updateOperator)
+router.put("/:username/operators/:operatorId", upload.single("profilePic"), bodyParser.urlencoded({ extended: true }), verifyUser || verifyAdmin, updateOperator)
 
 //DELETE OPERATOR INFORMATION
 router.delete("/:username/operators/:operatorId", verifyUser || verifyAdmin, deleteOperator)
