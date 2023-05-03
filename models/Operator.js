@@ -63,6 +63,14 @@ module.exports = (sequelize, Sequelize) => {
         }
     })
 
+    Operator.beforeCreate(async (operator, options) => {
+        // generate operatorId
+        const count = await Operator.count();
+        const operatorId = `BG-TGL-${String(count + 1).padStart(4, '0')}`;
+
+        operator.operatorId = operatorId;
+    });
+
     Operator.associate = function(model) {
         Operator.belongsTo(model.user, {
             "foreignKey": "userId",
