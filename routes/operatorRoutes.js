@@ -9,7 +9,7 @@ const storage = multer.diskStorage({
       cb(null, "uploads");
     },
     filename: (req, file, cb) => {
-      cb(null, 'tgtemplate' + '-' + Date.now() + '.csv');
+      cb(null, 'tgtemplate' + '-' + Date.now() + '.png');
     },
 });
 const upload = multer({ storage: storage})
