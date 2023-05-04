@@ -13,8 +13,15 @@ const createOperator = async (req, res, next) => {
             if (req.file) {
                 req.body.profilePic = req.file.filename
             }
+            const maxOperator = await db.operator.max('operatorId');
+            let newId = (maxOperator ? parseInt(maxOperator.substr(3), 10) + 1 : 1);
+            let operatorId = `BG-OP-${newId.toString().padStart(6, '0')}`;
+            while (await db.operator.findOne({ where: { operatorId } })) {
+                newId++;
+                operatorId = `BG-OP-${newId.toString().padStart(6, '0')}`;
+            }
             const info = {
-                operatorId: req.body.operatorId,
+                operatorId: operatorId,
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
                 phoneNumber: req.body.phoneNumber,
