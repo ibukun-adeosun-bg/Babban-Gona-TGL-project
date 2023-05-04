@@ -2,11 +2,11 @@ const db = require("../config/dbConfig")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const { createError } = require("../middleware/error")
+const { schema } = require("../middleware/validation")
 
 //REGISTER A USER
 const register  = async (req, res, next) => {
     try {
-        //Creating a user
         const salt = bcrypt.genSaltSync(10)
         const hashedPassword = bcrypt.hashSync(req.body.password, salt)
         const info = {
@@ -17,13 +17,21 @@ const register  = async (req, res, next) => {
         }
         const alreadyExistsUser = await db.user.findOne({ where: { email: req.body.email }})
         if (alreadyExistsUser) return next(createError(409, "This User already Exists"))
-        const newUser = new db.user(info)
-        await newUser.save()
-            .then(() => {
-                res.status(200).json("User has been Registered")
-            }).catch(err => {
-                res.status(500).json(err)
-            })
+
+        if (!schema.validate(req.body.password)) {
+            next(createError(403, "Password must contain at least 8 characters, an uppercase letter, a lowercase letter, no spaces and at least 2 digits"))
+        } else {
+            const newUser = new db.user(info)
+            await newUser.save()
+                .then(() => {
+                    res.status(200).json({
+                        success: true,
+                        message: "User has been Successfully Registered"
+                    })
+                }).catch(err => {
+                    res.status(500).json(err)
+                })
+        }
     } catch (err) {
         next(err)
     }
