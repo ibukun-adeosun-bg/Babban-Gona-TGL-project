@@ -2,7 +2,7 @@ const db = require("../config/dbConfig")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 const { createError } = require("../middleware/error")
-const { schema } = require("../middleware/validation")
+const { schema, emailValidator } = require("../middleware/validation")
 
 //REGISTER A USER
 const register  = async (req, res, next) => {
@@ -18,7 +18,9 @@ const register  = async (req, res, next) => {
         const alreadyExistsUser = await db.user.findOne({ where: { email: req.body.email }})
         if (alreadyExistsUser) return next(createError(409, "This User already Exists"))
 
-        if (!schema.validate(req.body.password)) {
+        if (!emailValidator.validate(req.body.email)) {
+            next(createError(403, "Invalid Email, Put your email in its required format"))
+        } else if (!schema.validate(req.body.password)) {
             next(createError(403, "Password must contain at least 8 characters, an uppercase letter, a lowercase letter, no spaces and at least 2 digits"))
         } else {
             const newUser = new db.user(info)

@@ -1,4 +1,5 @@
 const passwordValidator = require("password-validator")
+const emailValidator = require("email-validator")
 
 const schema = new passwordValidator();
 schema
@@ -11,4 +12,4 @@ schema
 .is().not().oneOf(['Passw0rd', 'Password123']);
 
 
-module.exports = { schema }
+module.exports = { schema, emailValidator }
