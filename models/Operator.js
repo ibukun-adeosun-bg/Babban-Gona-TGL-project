@@ -51,6 +51,7 @@ module.exports = (sequelize, Sequelize) => {
         identificationNumber: {
             type: Sequelize.STRING,
             allowNull: false,
+            unique: true,
             validate: {
                 len: 11
             }
