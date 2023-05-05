@@ -18,6 +18,7 @@ module.exports = (sequelize, Sequelize) => {
         phoneNumber: {
             type: Sequelize.STRING,
             allowNull: false,
+            unique: true,
             validate: {
                 len: 11
             }
@@ -48,7 +49,7 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.DATEONLY,
             allowNull: false
         },
-        identificationNumber: {
+        nin: {
             type: Sequelize.STRING,
             allowNull: false,
             unique: true,

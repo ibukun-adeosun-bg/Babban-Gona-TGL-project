@@ -1,11 +1,16 @@
 const { states, stateLGAs } = require("../config/data")
 const db = require("../config/dbConfig")
 const { createError } = require("../middleware/error")
+const { phoneNumberValidator, numberPattern } = require("../middleware/validation")
 
 //CREATE AN OPERATOR
 const createOperator = async (req, res, next) => {
     try {
-        if (!states.includes(req.body.state)) {
+        if (!numberPattern.test(req.body.phoneNumber)) {
+            next(createError(403, "Invalid Phone numbers, you can only input numbers"))
+        } else if (!numberPattern.test(req.body.nin)) {
+            next(createError(403, "Invalid National Identification Number"))
+        } else if (!states.includes(req.body.state)) {
             next(createError(403, "Invalid State"))
         } else if (!stateLGAs[req.body.state].includes(req.body.localGovernmentArea)) {
             next(createError(403, "Invalid Local Government Area"))
@@ -30,7 +35,7 @@ const createOperator = async (req, res, next) => {
                 localGovernmentArea: req.body.localGovernmentArea,
                 sex: req.body.sex,
                 dateOfBirth: req.body.dateOfBirth,
-                identificationNumber: req.body.identificationNumber,
+                nin: req.body.nin,
                 profilePic: req.body.profilePic,
                 userId: req.body.userId
             }
