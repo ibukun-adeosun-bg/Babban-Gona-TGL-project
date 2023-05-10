@@ -1,4 +1,5 @@
 const express = require("express")
+const compression = require("compression")
 const helmet = require("helmet")
 const morgan = require("morgan")
 const cors = require("cors")
@@ -24,6 +25,7 @@ db.sequelize.sync({ force: false })
 
 const app = express()
 app.use(express.json())
+app.use(compression())
 app.use(helmet())
 app.use(morgan("dev"))
 app.use(cors())

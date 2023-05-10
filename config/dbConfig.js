@@ -38,10 +38,16 @@ db.sequelize = sequelize
 const User = require("../models/User.js")(sequelize, Sequelize)
 const Product = require("../models/Product.js")(sequelize, Sequelize)
 const Operator = require("../models/Operator.js")(sequelize, Sequelize)
+const Lga = require("../models/Lga.js")(sequelize, Sequelize)
+const State = require("../models/States.js")(sequelize, Sequelize)
+const Seed = require("../models/Seed.js")(sequelize, Sequelize)
 
 db.user = User
 db.product = Product
 db.operator = Operator
+db.lga = Lga
+db.state = State
+db.seed = Seed
 
 User.associate(db)
 Operator.associate(db)

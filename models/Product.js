@@ -7,10 +7,7 @@ module.exports = (sequelize, Sequelize) => {
         },
         productType: {
             type: Sequelize.STRING,
-            allowNull: false,
-            validate: {
-                isIn: [['maize', 'rice']]
-            }
+            allowNull: false
         },
         seedType: {
             type: Sequelize.STRING,
@@ -27,6 +24,13 @@ module.exports = (sequelize, Sequelize) => {
         Product.belongsTo(model.operator, {
             "foreignKey": "operatorId",
             "onDelete": "cascade"
+        })
+    }
+
+    Product.associate = function(model) {
+        Product.belongsTo(model.seed, {
+            foreignKey: "seedType",
+            onDelete: "cascade"
         })
     }
 

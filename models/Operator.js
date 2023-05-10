@@ -1,5 +1,3 @@
-const { v4: uuidv4 } = require("uuid")
-
 module.exports = (sequelize, Sequelize) => {
     const Operator = sequelize.define("Operator", {
         operatorId: {
@@ -78,6 +76,20 @@ module.exports = (sequelize, Sequelize) => {
         Operator.hasMany(model.product, {
             "foreignKey": "operatorId",
             "onDelete": "cascade"
+        })
+    }
+
+    Operator.associate = function(model) {
+        Operator.belongsTo(model.state, {
+            foreignKey: "state",
+            onDelete: "cascade"
+        })
+    }
+
+    Operator.associate = function(model) {
+        Operator.belongsTo(model.lga, {
+            foreignKey: "localGovernmentArea",
+            onDelete: "cascade"
         })
     }
 

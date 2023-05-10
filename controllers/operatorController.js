@@ -1,13 +1,13 @@
 const { states, stateLGAs } = require("../config/data")
 const db = require("../config/dbConfig")
 const { createError } = require("../middleware/error")
-const { phoneNumberValidator, numberPattern } = require("../middleware/validation")
+const { numberPattern } = require("../middleware/validation")
 
 //CREATE AN OPERATOR
 const createOperator = async (req, res, next) => {
     try {
         if (!numberPattern.test(req.body.phoneNumber)) {
-            next(createError(403, "Invalid Phone numbers, you can only input numbers"))
+            next(createError(403, "Invalid Phone number, you can only input numbers"))
         } else if (!numberPattern.test(req.body.nin)) {
             next(createError(403, "Invalid National Identification Number"))
         } else if (!states.includes(req.body.state)) {
@@ -19,7 +19,8 @@ const createOperator = async (req, res, next) => {
                 req.body.profilePic = req.file.filename
             }
             const maxOperator = await db.operator.max('operatorId');
-            let newId = (maxOperator ? parseInt(maxOperator.substr(3), 10) + 1 : 1);
+            console.log(maxOperator);
+            let newId = (maxOperator ? maxOperator + 1 : 1);
             let operatorId = `BG-OP-${newId.toString().padStart(6, '0')}`;
             while (await db.operator.findOne({ where: { operatorId } })) {
                 newId++;
