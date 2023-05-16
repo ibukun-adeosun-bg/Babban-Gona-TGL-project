@@ -1,7 +1,7 @@
 const express = require("express")
 const multer = require("multer")
 const bodyParser = require("body-parser")
-const { verifyUser, verifyAdmin } = require("../middleware/verifyToken")
+const { verifyUser, verifyAdmin, verifyToken } = require("../middleware/verifyToken")
 const { createOperator, getOperator, getAllOperators, updateOperator, deleteOperator } = require("../controllers/operatorController")
 const router = express.Router()
 const storage = multer.diskStorage({
@@ -15,19 +15,19 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage})
 
 //CREATE AN OPERATOR
-router.post("/:username/operators", upload.single("profilePic"), bodyParser.urlencoded({ extended: true }), verifyUser, createOperator)
+router.post("/", upload.single("profilePic"), bodyParser.urlencoded({ extended: true }), verifyToken, createOperator)
 
 //GET AN OPERATOR
-router.get("/:username/operators/:operatorId", verifyUser || verifyAdmin, getOperator)
+router.get("/:operatorId", verifyUser, getOperator)
 
 //GET ALL OPERATORS
-router.get("/:username/operators", verifyAdmin, getAllOperators)
+router.get("/", verifyAdmin, getAllOperators)
 
 //UPDATE OPERATOR INFORMATION
-router.put("/:username/operators/:operatorId", upload.single("profilePic"), bodyParser.urlencoded({ extended: true }), verifyUser || verifyAdmin, updateOperator)
+router.put("/:operatorId", upload.single("profilePic"), bodyParser.urlencoded({ extended: true }), verifyUser, updateOperator)
 
 //DELETE OPERATOR INFORMATION
-router.delete("/:username/operators/:operatorId", verifyUser || verifyAdmin, deleteOperator)
+router.delete("/:operatorId", verifyUser || verifyAdmin, deleteOperator)
 
 
 

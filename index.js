@@ -32,7 +32,7 @@ app.use(cors())
 app.use("/api/v1/auth", authRoutes)
 app.use("/api/v1/users", userRoutes)
 app.use("/api/v1/products", productRoutes)
-app.use("/api/v1/users", operatorRoutes)
+app.use("/api/v1/operators", operatorRoutes)
 app.use((err, req, res, next) => {
     const errorStatus = err.status || 500
     const errorMessage = err.message || "Something Went Wrong!!!"

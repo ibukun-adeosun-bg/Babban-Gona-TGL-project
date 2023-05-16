@@ -58,8 +58,8 @@ module.exports = (sequelize, Sequelize) => {
         profilePic: {
             type: Sequelize.STRING
         },
-        userId: {
-            type: Sequelize.INTEGER,
+        username: {
+            type: Sequelize.STRING,
             allowNull: false,
             unique: true
         }
@@ -67,7 +67,7 @@ module.exports = (sequelize, Sequelize) => {
 
     Operator.associate = function(model) {
         Operator.belongsTo(model.user, {
-            "foreignKey": "userId",
+            "foreignKey": "username",
             "onDelete": "cascade"
         })
     }

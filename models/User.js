@@ -3,7 +3,8 @@ module.exports = (sequelize, Sequelize) => {
         username: {
             type: Sequelize.STRING,
             allowNull: false,
-            unique: true
+            unique: true,
+            primaryKey: true
         },
         email: {
             type: Sequelize.STRING,
@@ -17,15 +18,19 @@ module.exports = (sequelize, Sequelize) => {
                 min: 8
             }
         },
-        isAdmin: {
-            type: Sequelize.BOOLEAN
+        role: {
+            type: Sequelize.STRING,
+            allowNull: false,
+            validate: {
+                isIn: [["Operator", "Field Officer", "Admin"]]
+            }
         }
     })
 
     User.associate = function(model) {
         User.hasOne(model.operator, {
             "onDelete": "cascade",
-            "foreignKey": "userId"
+            "foreignKey": "username"
         })
     }
     return User

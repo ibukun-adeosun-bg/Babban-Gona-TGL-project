@@ -13,7 +13,7 @@ const register  = async (req, res, next) => {
             username: req.body.username,
             email: req.body.email,
             password: hashedPassword,
-            isAdmin: req.body.isAdmin ? req.body.isAdmin : false
+            role: req.body.role ? req.body.role : "Operator"
         }
         const alreadyExistsUser = await db.user.findOne({ where: { email: req.body.email }})
         if (alreadyExistsUser) return next(createError(409, "This User already Exists"))
@@ -51,15 +51,14 @@ const login = async (req, res, next) => {
         const accessToken = jwt.sign(
             {
                 username: user.username,
-                isAdmin: user.isAdmin
+                role: user.role
             },
             process.env.JWT_SEC,
             { expiresIn: "30d" }
         )
         res.status(200).json({
             message: "You are now logged in and Authorized",
-            id: user.id,
-            isAdmin: user.isAdmin,
+            role: user.role,
             username: user.username,
             accessToken: accessToken
         })

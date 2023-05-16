@@ -49,7 +49,10 @@ db.lga = Lga
 db.state = State
 db.seed = Seed
 
-User.associate(db)
 Operator.associate(db)
+State.associate(db)
+Lga.associate(db)
+Product.associate(db)
+Seed.associate(db)
 
 module.exports = db

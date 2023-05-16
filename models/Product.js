@@ -15,8 +15,7 @@ module.exports = (sequelize, Sequelize) => {
         },
         operatorId: {
             type: Sequelize.STRING,
-            allowNull: false,
-            unique: true
+            allowNull: false
         }
     })
 

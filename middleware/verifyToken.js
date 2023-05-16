@@ -32,7 +32,7 @@ const verifyUser = async (req, res, next) => {
 
 const verifyAdmin = async (req, res, next) => {
     verifyToken(req, res, () => {
-        if(req.user.isAdmin) {
+        if(req.user.role === "Admin") {
             next();
         } else {
             res.status(401).json("You are not an Admin, so you are not Authorized to do this")
