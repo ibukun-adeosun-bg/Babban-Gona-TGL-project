@@ -40,5 +40,25 @@ const verifyAdmin = async (req, res, next) => {
     })
 }
 
+const verifyOperator = async (req, res, next) => {
+    verifyToken(req, res, () => {
+        if(req.user.role === "Operator") {
+            next();
+        } else {
+            res.status(401).json("You are not an Operator, so you are not authorized to do this")
+        }
+    })
+}
 
-module.exports = { verifyToken, verifyUser, verifyAdmin }
+const verifyFieldOfficer = async (req, res, next) => {
+    verifyToken(req, res, () => {
+        if(req.user.role === "Field Officer") {
+            next();
+        } else {
+            res.status(401).json("You are not a Field Officer so you are not authorized to do this")
+        }
+    })
+}
+
+
+module.exports = { verifyToken, verifyUser, verifyAdmin, verifyOperator, verifyFieldOfficer }

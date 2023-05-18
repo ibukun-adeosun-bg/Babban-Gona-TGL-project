@@ -7,6 +7,7 @@ const authRoutes = require("./routes/authRoutes.js")
 const userRoutes = require("./routes/userRoutes.js")
 const productRoutes = require("./routes/productRoutes.js")
 const operatorRoutes = require("./routes/operatorRoutes.js")
+const fieldOfficerRoutes = require("./routes/fieldOfficerRoutes.js")
 const db = require("./config/dbConfig.js")
 
 db.sequelize.authenticate()
@@ -33,6 +34,7 @@ app.use("/api/v1/auth", authRoutes)
 app.use("/api/v1/users", userRoutes)
 app.use("/api/v1/products", productRoutes)
 app.use("/api/v1/operators", operatorRoutes)
+app.use("/api/v1/fieldOfficers", fieldOfficerRoutes)
 app.use((err, req, res, next) => {
     const errorStatus = err.status || 500
     const errorMessage = err.message || "Something Went Wrong!!!"

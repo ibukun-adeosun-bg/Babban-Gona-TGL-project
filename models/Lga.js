@@ -25,5 +25,12 @@ module.exports = (sequelize, Sequelize) => {
         })
     }
 
+    Lga.associate = function(model) {
+        Lga.hasMany(model.fieldOfficer, {
+            foreignKey: "localGovernmentArea",
+            onDelete: "cascade"
+        })
+    }
+
     return Lga
 }

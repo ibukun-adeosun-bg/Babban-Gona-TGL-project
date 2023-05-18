@@ -58,6 +58,8 @@ const createOperator = async (req, res, next) => {
                 dateOfBirth: req.body.dateOfBirth,
                 nin: req.body.nin,
                 profilePic: req.body.profilePic,
+                productName: req.body.productName,
+                seedType: req.body.seedType,
                 username: req.body.username
             }
             const newOperator = new db.operator(info)
@@ -87,7 +89,9 @@ const getOperator = async (req, res, next) => {
 //GET ALL OPERATORS
 const getAllOperators = async (req, res, next) => {
     try {
-        const operators = await db.operator.findAll({})
+        const operators = await db.operator.findAll({
+            include: { model: db.fieldOfficer }
+        })
         res.status(200).json(operators)
     } catch (err) {
         next(err)

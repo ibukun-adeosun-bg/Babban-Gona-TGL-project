@@ -4,7 +4,10 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: false,
             unique: true,
-            primaryKey: true
+            primaryKey: true,
+            validate: {
+                min: 8
+            }
         },
         email: {
             type: Sequelize.STRING,

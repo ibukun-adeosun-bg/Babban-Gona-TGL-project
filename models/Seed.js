@@ -1,6 +1,6 @@
 module.exports = (sequelize, Sequelize) => {
     const Seed = sequelize.define("Seed", {
-        SeedType: {
+        seedType: {
             type: Sequelize.STRING,
             allowNull: false,
             primaryKey: true
@@ -8,7 +8,7 @@ module.exports = (sequelize, Sequelize) => {
     });
 
     Seed.associate = function(model) {
-        Seed.hasMany(model.product, {
+        Seed.hasMany(model.operator, {
             foreignKey: "seedType",
             onDelete: "cascade"
         })

@@ -4,10 +4,7 @@ const db = require("../config/dbConfig")
 const createProduct = async (req, res, next) => {
     try {
         const info = {
-            productId: req.body.productId,
-            productType: req.body.productType,
-            seedType: req.body.seedType,
-            operatorId: req.body.operatorId
+            productName: req.body.productName
         }
         const newProduct = new db.product(info)
         await newProduct.save()
@@ -24,8 +21,8 @@ const createProduct = async (req, res, next) => {
 //GET A PRODUCT
 const getProduct = async (req, res, next) => {
     try {
-        const id = req.params.productId
-        const product = await db.product.findOne({ where: { id: id }})
+        const name = req.params.productName
+        const product = await db.product.findOne({ where: { productName: name }})
         res.status(200).json(product)
     } catch (err) {
         next(err)
@@ -43,10 +40,10 @@ const getAllProducts = async (req, res, next) => {
 
 const updateProduct = async (req, res, next) => {
     try {
-        const id = req.params.productId
+        const name = req.params.productName
         await db.product.update(
             req.body,
-            { where: { id: id }}
+            { where: { productName: name }}
         ).then(() => {
             res.status(200).json("Product Information has been Updated")
         }).catch(err => {
@@ -59,8 +56,8 @@ const updateProduct = async (req, res, next) => {
 
 const deleteProduct = async (req, res, next) => {
     try {
-        const id = req.params.productId
-        await db.product.destroy({ where: { id: id }})
+        const name = req.params.productName
+        await db.product.destroy({ where: { productName: name }})
             .then(() => {
                 res.status(200).json("Product has been Deleted")
             }).catch(err => {

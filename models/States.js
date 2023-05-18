@@ -20,6 +20,13 @@ module.exports = (sequelize, Sequelize) => {
     }
 
     State.associate = function(model) {
+        State.hasMany(model.fieldOfficer, {
+            foreignKey: "state",
+            onDelete: "cascade"
+        })
+    }
+
+    State.associate = function(model) {
         State.hasMany(model.lga, {
             foreignKey: "state",
             onDelete: "cascade"

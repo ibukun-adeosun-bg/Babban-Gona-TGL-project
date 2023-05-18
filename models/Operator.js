@@ -58,6 +58,14 @@ module.exports = (sequelize, Sequelize) => {
         profilePic: {
             type: Sequelize.STRING
         },
+        productName: {
+            type: Sequelize.STRING,
+            allowNull: false
+        },
+        seedType: {
+            type: Sequelize.STRING,
+            allowNull: false
+        },
         username: {
             type: Sequelize.STRING,
             allowNull: false,
@@ -90,6 +98,27 @@ module.exports = (sequelize, Sequelize) => {
         Operator.belongsTo(model.lga, {
             foreignKey: "localGovernmentArea",
             onDelete: "cascade"
+        })
+    }
+
+    Operator.associate = function(model) {
+        Operator.hasMany(model.fieldOfficer, {
+            "foreignKey": "operatorId",
+            "onDelete": "cascade"
+        })
+    }
+
+    Operator.associate = function(model) {
+        Operator.belongsTo(model.product, {
+            "foreignKey": "productName",
+            "onDelete": "cascade"
+        })
+    }
+
+    Operator.associate = function(model) {
+        Operator.belongsTo(model.seed, {
+            "foreignKey": "seedType",
+            "onDelete": "cascade"
         })
     }
 
