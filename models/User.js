@@ -3,7 +3,6 @@ module.exports = (sequelize, Sequelize) => {
         username: {
             type: Sequelize.STRING,
             allowNull: false,
-            unique: true,
             primaryKey: true,
             validate: {
                 min: 8
@@ -32,9 +31,17 @@ module.exports = (sequelize, Sequelize) => {
 
     User.associate = function(model) {
         User.hasOne(model.operator, {
-            "onDelete": "cascade",
-            "foreignKey": "username"
-        })
+            "foreignKey": "username",
+            "onDelete": "cascade"
+        });
+
+        User.hasOne(model.fieldOfficer, {
+            "foreignKey": "username",
+            "onDelete": "cascade"
+        });
+
     }
+
+
     return User
 }

@@ -71,31 +71,30 @@ module.exports = (sequelize, Sequelize) => {
     })
 
     FieldOfficer.associate = function(model) {
-        FieldOfficer.belongsTo(model.user, {
-            "foreignKey": "username",
-            "onDelete": "cascade"
-        })
-    }
-
-    FieldOfficer.associate = function(model) {
-        FieldOfficer.belongsTo(model.operator, {
-            "foreignKey": "operatorId",
-            "onDelete": "cascade"
-        })
-    }
-
-    FieldOfficer.associate = function(model) {
-        FieldOfficer.belongsTo(model.state, {
-            foreignKey: "state",
-            onDelete: "cascade"
-        })
-    }
-
-    FieldOfficer.associate = function(model) {
         FieldOfficer.belongsTo(model.lga, {
             foreignKey: "localGovernmentArea",
             onDelete: "cascade"
-        })
+        });
+
+        FieldOfficer.belongsTo(model.state, {
+            foreignKey: "state",
+            onDelete: "cascade"
+        });
+
+        FieldOfficer.belongsTo(model.user, {
+            "foreignKey": "username",
+            "onDelete": "cascade"
+        });
+
+        FieldOfficer.belongsTo(model.operator, {
+            "foreignKey": "operatorId",
+            "onDelete": "cascade"
+        });
+
+        FieldOfficer.hasMany(model.assessment, {
+            "foreignKey": "fieldOfficerId",
+            "onDelete": "cascade"
+        });
     }
 
     return FieldOfficer

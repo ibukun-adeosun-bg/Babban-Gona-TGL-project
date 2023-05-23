@@ -78,49 +78,38 @@ module.exports = (sequelize, Sequelize) => {
             "foreignKey": "username",
             "onDelete": "cascade"
         })
-    }
 
-    Operator.associate = function(model) {
-        Operator.hasMany(model.product, {
-            "foreignKey": "operatorId",
-            "onDelete": "cascade"
-        })
-    }
-
-    Operator.associate = function(model) {
         Operator.belongsTo(model.state, {
             foreignKey: "state",
             onDelete: "cascade"
         })
-    }
 
-    Operator.associate = function(model) {
         Operator.belongsTo(model.lga, {
             foreignKey: "localGovernmentArea",
             onDelete: "cascade"
         })
-    }
 
-    Operator.associate = function(model) {
         Operator.hasMany(model.fieldOfficer, {
+            "foreignKey": "operatorId",
+            "onDelete": "cascade"
+        })
+
+        Operator.belongsTo(model.product, {
+            "foreignKey": "productName",
+            "onDelete": "cascade"
+        })
+
+        Operator.belongsTo(model.seed, {
+            "foreignKey": "seedType",
+            "onDelete": "cascade"
+        })
+
+        Operator.hasMany(model.assessment, {
             "foreignKey": "operatorId",
             "onDelete": "cascade"
         })
     }
 
-    Operator.associate = function(model) {
-        Operator.belongsTo(model.product, {
-            "foreignKey": "productName",
-            "onDelete": "cascade"
-        })
-    }
-
-    Operator.associate = function(model) {
-        Operator.belongsTo(model.seed, {
-            "foreignKey": "seedType",
-            "onDelete": "cascade"
-        })
-    }
 
     return Operator
 }

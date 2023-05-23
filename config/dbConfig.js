@@ -42,6 +42,7 @@ const Lga = require("../models/Lga.js")(sequelize, Sequelize)
 const State = require("../models/States.js")(sequelize, Sequelize)
 const Seed = require("../models/Seed.js")(sequelize, Sequelize)
 const FieldOfficer = require("../models/FieldOfficer.js")(sequelize, Sequelize)
+const Assessment = require("../models/Assessment.js")(sequelize, Sequelize)
 
 db.user = User
 db.product = Product
@@ -50,6 +51,7 @@ db.lga = Lga
 db.state = State
 db.seed = Seed
 db.fieldOfficer = FieldOfficer
+db.assessment = Assessment
 
 User.associate(db)
 Operator.associate(db)
@@ -58,6 +60,7 @@ Lga.associate(db)
 Product.associate(db)
 Seed.associate(db)
 FieldOfficer.associate(db)
+Assessment.associate(db)
 
 
 module.exports = db
