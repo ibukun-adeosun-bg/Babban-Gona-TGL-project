@@ -4,10 +4,10 @@ const { generateTestQuestions, submitTestResponses } = require("../controllers/a
 const router = express.Router()
 
 //GENERATE TEST QUESTIONS FOR A FIELD OFFICER
-router.get("/:operatorId/fieldOfficers/:fieldOfficerId/generate-test-questions", verifyAdmin, generateTestQuestions)
+router.get("/:fieldOfficerId/generate-test-questions", verifyAdmin, generateTestQuestions)
 
 //SUBMIT TEST RESPONSES FOR A FIELD OFFICER
-router.post("/:operatorId/fieldOfficers/:fieldOfficerId/submit-test-responses", verifyAdmin, submitTestResponses)
+router.post("/:sessionId/submit-test-responses", verifyAdmin, submitTestResponses)
 
 
 module.exports = router

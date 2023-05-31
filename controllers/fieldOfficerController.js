@@ -1,7 +1,7 @@
 const db = require("../config/dbConfig");
 const bcrypt = require("bcryptjs")
 const { states, stateLGAs } = require("../config/data")
-const { numberPattern } = require("../middleware/validation")
+const { numberPattern, LengthPatternforBVN } = require("../middleware/validation")
 const { createError } = require("../middleware/error");
 
 const createFieldOfficer = async (req, res, next) => {
@@ -11,7 +11,9 @@ const createFieldOfficer = async (req, res, next) => {
         });
 
         if (!numberPattern.test(req.body.BVN)) {
-            next(createError(403, "Invalid Phone number, you can only input numbers"))
+            next(createError(403, "Invalid BVN, you can only input numbers"))
+        } else if (!LengthPatternforBVN.test(req.body.BVN)) {
+            next(createError(403, "Invalid Bank Verification Number, must only be 11 numbers"))
         } else if (!numberPattern.test(req.body.governmentIdentificationID)) {
             next(createError(403, "Invalid Identification ID"))
         } else if (state.isdisabled) {
@@ -67,7 +69,11 @@ const createFieldOfficer = async (req, res, next) => {
             const newFieldOfficer = new db.fieldOfficer(info)
             await newFieldOfficer.save()
                 .then(() => {
-                    res.status(200).json("You are now a Field Officer on the Trust Group Leader Platform")
+                    res.status(200).json({
+                        success: true,
+                        status: "OK",
+                        message: "You are now a Field Officer on the Trust Group Leader Platform"
+                    })
                 }).catch(err => {
                     res.status(500).json(err)
                 })
@@ -103,7 +109,7 @@ const updateFieldOfficer = async (req, res, next) => {
             req.body,
             { where: { fieldOfficerId: id }}
         ).then(() => {
-            res.status(200).json("Field Officer Informariuon has been Updated")
+            res.status(200).json("Field Officer Information has been Updated")
         }).catch(err => {
             res.status(500).json(err)
         })

@@ -38,7 +38,7 @@ app.use("/api/v1/products", productRoutes)
 app.use("/api/v1/operators", operatorRoutes)
 app.use("/api/v1/fieldOfficers", fieldOfficerRoutes)
 app.use("/api/v1/seedTypes", seedTypeRoutes)
-app.use("/api/v1/operators", assessmentRoutes)
+app.use("/api/v1/assessments", assessmentRoutes)
 app.use((err, req, res, next) => {
     const errorStatus = err.status || 500
     const errorMessage = err.message || "Something Went Wrong!!!"

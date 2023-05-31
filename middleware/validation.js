@@ -3,6 +3,7 @@ const emailValidator = require("email-validator")
 const phoneNumberValidator = require("validate-phone-number-node-js")
 
 const numberPattern = /^[0-9]+$/
+const LengthPatternforBVN = /^.{11}$/
 const schema = new passwordValidator();
 schema
 .is().min(8)                                    // Minimum length 8
@@ -14,4 +15,4 @@ schema
 .is().not().oneOf(['Passw0rd', 'Password123']);
 
 
-module.exports = { schema, emailValidator, phoneNumberValidator, numberPattern }
+module.exports = { schema, emailValidator, phoneNumberValidator, numberPattern, LengthPatternforBVN }

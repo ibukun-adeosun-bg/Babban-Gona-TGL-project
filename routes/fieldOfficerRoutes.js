@@ -1,7 +1,7 @@
 const express = require("express")
 const multer = require("multer")
 const bodyParser = require("body-parser");
-const { verifyToken, verifyUser, verifyAdmin, verifyFieldOfficer } = require("../middleware/verifyToken");
+const { verifyUser, verifyAdmin, verifyFieldOfficer } = require("../middleware/verifyToken");
 const { createFieldOfficer, getFieldOfficer, getAllFieldOfficers, updateFieldOfficer, deleteFieldOfficer } = require("../controllers/fieldOfficerController");
 const router = express.Router()
 const storage = multer.diskStorage({
@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage})
 
 //CREATE A FIELD OFFICER
-router.post("/", upload.single("governmentIdentificationImage"), bodyParser.urlencoded({ extended: true }), verifyToken, createFieldOfficer)
+router.post("/", upload.single("governmentIdentificationImage"), bodyParser.urlencoded({ extended: true }), verifyFieldOfficer, createFieldOfficer)
 
 //GET A FIELD OFFICER
 router.get("/:username/:fieldOfficerId", verifyUser, getFieldOfficer)

@@ -28,7 +28,6 @@ const getRandomQuestions = (questions, count) => {
 const generateTestQuestions = async (req, res, next) => {
     try {
         const fieldOfficerId = req.params.fieldOfficerId
-        const operatorId = req.params.operatorId
         const fieldOfficer = await db.fieldOfficer.findOne(
             { where: { fieldOfficerId: fieldOfficerId }}
         )
@@ -43,12 +42,30 @@ const generateTestQuestions = async (req, res, next) => {
             const randomQuestions = getRandomQuestions(categoryQuestions, 5);
             selectedQuestions.push(...randomQuestions);
         }
+
+        function padNumber(num, size) {
+            let str = num.toString();
+            while (str.length < size) {
+                str = "0" + str;
+            }
+            return str;
+        }
+
+        const maxSession = await db.assessment.max('sessionId');
+        console.log(maxSession);
+        let newId = (maxSession ? parseInt(maxSession.split('-')[1]) + 1 : 1);
+        let sessionId = `SESSION-${padNumber(newId, 2)}`;
+        while (await db.assessment.findOne({ where: { sessionId } })) {
+            newId++;
+            sessionId = `SESSION-${padNumber(newId, 2)}`;
+        }
         //Save the assessment to the assessment database
-        await db.assessment.create({
+        const session = await db.assessment.create({
+            sessionId,
             fieldOfficerId,
-            operatorId,
             questions: selectedQuestions
         });
+        selectedQuestions.push({ sessionId: session.sessionId })
         res.status(200).json(selectedQuestions)
     } catch (err) {
         next(err)
@@ -57,11 +74,11 @@ const generateTestQuestions = async (req, res, next) => {
 
 const submitTestResponses = async (req, res, next) => {
     try {
-        const id = req.params.fieldOfficerId
+        const id = req.params.sessionId
         const responses = req.body.responses
         //Get the assessment for the field officer from the database
         const assessment = await db.assessment.findOne(
-            { where: { fieldOfficerId: id }}
+            { where: { sessionId: id }}
         )
         if (!assessment) return next(createError(404, "An Assessment has not being assigned to this Field Officer"))
         //calculate the score based on the responses
@@ -69,10 +86,8 @@ const submitTestResponses = async (req, res, next) => {
         for (const question of assessment.questions) {
             const questionId = question.id;
             const correctAnswer = question.answer;
-          
             // Find the corresponding response for the question
-            const response = responses.find((r) => r.id === questionId);
-          
+            const response = responses.find((r) => r.id === questionId);  
             if (response) {
               // Compare the answer in the response with the correct answer
               if (response.answer === correctAnswer) {
@@ -82,18 +97,24 @@ const submitTestResponses = async (req, res, next) => {
             }
         }
         //Save the score and response into the database
-        await db.assessment.update(
-            { score, responses },
-            { where: { fieldOfficerId: id }}
-        ).then(() => {
-            res.status(200).json({
-                success: false,
-                status: "OK",
-                message: "Response is accepted and the score has been graded"
+        if (assessment.submitted) {
+            next(createError(409, "A response has already been submitted for this assessment"))
+        } else {
+            let submitted = true
+            await db.assessment.update(
+                { score, responses, submitted },
+                { where: { sessionId: id }}
+            ).then(() => {
+                res.status(200).json({
+                    success: true,
+                    status: "OK",
+                    message: "Response is accepted and the score has been graded",
+                    score: score
+                })
+            }).catch(err => {
+                res.status(500).json(err)
             })
-        }).catch(err => {
-            res.status(500).json(err)
-        })
+        }
     } catch (err) {
         next(err)
     }

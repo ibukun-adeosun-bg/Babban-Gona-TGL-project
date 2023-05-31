@@ -5,7 +5,7 @@ module.exports = (sequelize, Sequelize) => {
             allowNull: false,
             primaryKey: true,
             validate: {
-                min: 8
+                len: [5, 10]
             }
         },
         email: {

@@ -7,11 +7,17 @@ module.exports = (sequelize, Sequelize) => {
         },
         firstName: {
             type: Sequelize.STRING,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                notEmpty: true
+            }
         },
         lastName: {
             type: Sequelize.STRING,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                notEmpty: true
+            }
         },
         sex: {
             type: Sequelize.STRING,
