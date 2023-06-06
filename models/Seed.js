@@ -4,6 +4,10 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: false,
             primaryKey: true
+        },
+        isDisabled: {
+            type: Sequelize.BOOLEAN,
+            defaultValue: false
         }
     });
 
@@ -13,6 +17,21 @@ module.exports = (sequelize, Sequelize) => {
             onDelete: "cascade"
         })
     }
+
+    Seed.afterSync(async () => {
+        const validSeedType = ["Large", "Medium", "Small"];
+        const existingSeedType = await Seed.findAll({
+          attributes: ['seedType'],
+        });
+        const existingSeedTypes = existingSeedType.map(s => s.seedType);
+    
+        const newSeedType = validSeedType.filter(s => !existingSeedTypes.includes(s));
+        const seedTypeRecords = newSeedType.map(s => ({ seedType: s }));
+    
+        if (seedTypeRecords.length) {
+          await Seed.bulkCreate(seedTypeRecords);
+        }
+    });
 
     return Seed
 }

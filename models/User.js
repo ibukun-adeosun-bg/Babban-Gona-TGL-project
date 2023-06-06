@@ -1,12 +1,9 @@
 module.exports = (sequelize, Sequelize) => {
     const User = sequelize.define("User", {
-        username: {
+        userId: {
             type: Sequelize.STRING,
             allowNull: false,
-            primaryKey: true,
-            validate: {
-                len: [5, 10]
-            }
+            primaryKey: true
         },
         email: {
             type: Sequelize.STRING,
@@ -15,33 +12,23 @@ module.exports = (sequelize, Sequelize) => {
         },
         password: {
             type: Sequelize.STRING,
-            allowNull: false,
-            validate: {
-                min: 8
-            }
+            allowNull: false
         },
         role: {
             type: Sequelize.STRING,
             allowNull: false,
             validate: {
-                isIn: [["Operator", "Field Officer", "Admin"]]
+                isIn: [["Operator", "Admin"]]
             }
         }
     })
 
     User.associate = function(model) {
         User.hasOne(model.operator, {
-            "foreignKey": "username",
+            "foreignKey": "userId",
             "onDelete": "cascade"
         });
-
-        User.hasOne(model.fieldOfficer, {
-            "foreignKey": "username",
-            "onDelete": "cascade"
-        });
-
     }
-
 
     return User
 }

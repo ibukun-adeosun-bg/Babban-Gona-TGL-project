@@ -9,8 +9,24 @@ const register  = async (req, res, next) => {
     try {
         const salt = bcrypt.genSaltSync(10)
         const hashedPassword = bcrypt.hashSync(req.body.password, salt)
+        function padNumber(num, size) {
+            let str = num.toString();
+            while (str.length < size) {
+                str = "0" + str;
+            }
+            return str;
+        }
+        
+        const maxUser = await db.user.max('userId');
+        console.log(maxUser);
+        let newId = (maxUser ? parseInt(maxUser.split('-')[1]) + 1 : 1);
+        let userId = `BG-${padNumber(newId, 3)}`;
+        while (await db.user.findOne({ where: { userId } })) {
+            newId++;
+            userId = `BG-${padNumber(newId, 3)}`;
+        }
         const info = {
-            username: req.body.username,
+            userId: userId,
             email: req.body.email,
             password: hashedPassword,
             role: req.body.role ? req.body.role : "Operator"
@@ -50,7 +66,7 @@ const login = async (req, res, next) => {
         
         const accessToken = jwt.sign(
             {
-                username: user.username,
+                userId: user.userId,
                 role: user.role
             },
             process.env.JWT_SEC,
@@ -59,7 +75,7 @@ const login = async (req, res, next) => {
         res.status(200).json({
             message: "You are now logged in and Authorized",
             role: user.role,
-            username: user.username,
+            userId: user.userId,
             accessToken: accessToken
         })
     } catch (err) {

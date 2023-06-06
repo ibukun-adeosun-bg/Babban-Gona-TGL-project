@@ -41,6 +41,7 @@ const Operator = require("../models/Operator.js")(sequelize, Sequelize)
 const Lga = require("../models/Lga.js")(sequelize, Sequelize)
 const State = require("../models/States.js")(sequelize, Sequelize)
 const Seed = require("../models/Seed.js")(sequelize, Sequelize)
+const GovernmentIdType = require("../models/IdentificationType.js")(sequelize, Sequelize)
 const FieldOfficer = require("../models/FieldOfficer.js")(sequelize, Sequelize)
 const Assessment = require("../models/Assessment.js")(sequelize, Sequelize)
 
@@ -50,6 +51,7 @@ db.operator = Operator
 db.lga = Lga
 db.state = State
 db.seed = Seed
+db.governmentIdType = GovernmentIdType
 db.fieldOfficer = FieldOfficer
 db.assessment = Assessment
 
@@ -59,6 +61,7 @@ State.associate(db)
 Lga.associate(db)
 Product.associate(db)
 Seed.associate(db)
+GovernmentIdType.associate(db)
 FieldOfficer.associate(db)
 Assessment.associate(db)
 

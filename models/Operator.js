@@ -66,16 +66,15 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING,
             allowNull: false
         },
-        username: {
+        userId: {
             type: Sequelize.STRING,
-            allowNull: false,
-            unique: true
+            allowNull: false
         }
     })
 
     Operator.associate = function(model) {
         Operator.belongsTo(model.user, {
-            "foreignKey": "username",
+            "foreignKey": "userId",
             "onDelete": "cascade"
         })
 
@@ -101,11 +100,6 @@ module.exports = (sequelize, Sequelize) => {
 
         Operator.belongsTo(model.seed, {
             "foreignKey": "seedType",
-            "onDelete": "cascade"
-        })
-
-        Operator.hasMany(model.assessment, {
-            "foreignKey": "operatorId",
             "onDelete": "cascade"
         })
     }

@@ -4,8 +4,8 @@ const bcrypt = require("bcryptjs")
 //GET A USER
 const getUser = async (req, res, next) => {
     try {
-        const username = req.params.username
-        const user = await db.user.findOne({ where: { username: username }})
+        const userId = req.params.userId
+        const user = await db.user.findOne({ where: { userId: userId }})
         res.status(200).json(user)
     } catch (err) {
         next(err)
@@ -29,8 +29,8 @@ const updateUser = async (req, res, next) => {
         req.body.password = bcrypt.hashSync(req.body.password, salt)
     }
     try {
-        const username = req.params.username
-        await db.user.update(req.body, { where: { username: username }})
+        const userId = req.params.userId
+        await db.user.update(req.body, { where: { userId: userId }})
             .then(() => {
                 res.status(200).json("User Information has been Updated")
             }).catch(err => {
@@ -44,8 +44,8 @@ const updateUser = async (req, res, next) => {
 //DELETE USER INFORMATION
 const deleteUser = async (req, res, next) => {
     try {
-        const username = req.params.username
-        await db.user.destroy({ where: { username: username }})
+        const userId = req.params.userId
+        await db.user.destroy({ where: { userId: userId }})
             .then(() => {
                 res.status(200).json("User Information has been deleted")
             }).catch(err => {

@@ -9,8 +9,10 @@ const createOperator = async (req, res, next) => {
         const state = await db.state.findOne({
             where: { state: req.body.state },
         });
-
-        if (!numberPattern.test(req.body.phoneNumber)) {
+        const isUserOperator = await db.operator.findOne({ where: { userId: req.body.userId }})
+        if (isUserOperator) {
+            next(createError(409, "This User has already been registered as an operator"))
+        } else if (!numberPattern.test(req.body.phoneNumber)) {
             next(createError(403, "Invalid Phone number, you can only input numbers"))
         } else if (!numberPattern.test(req.body.nin)) {
             next(createError(403, "Invalid National Identification Number"))
@@ -60,7 +62,7 @@ const createOperator = async (req, res, next) => {
                 profilePic: req.body.profilePic,
                 productName: req.body.productName,
                 seedType: req.body.seedType,
-                username: req.body.username
+                userId: req.body.userId
             }
             const newOperator = new db.operator(info)
             await newOperator.save()
@@ -130,6 +132,20 @@ const deleteOperator = async (req, res, next) => {
     }
 }
 
+//GET ALL FIELD OFFICERS RECRUITED BY AN OPERATOR
+const operatorFieldOfficers = async (req, res, next) => {
+    try {
+        const id = req.params.operatorId
+        const operatorAndOfficers = await db.operator.findOne({
+            where: { operatorId: id },
+            include: [{ model: db.fieldOfficer }]
+        });
+        res.status(200).json(operatorAndOfficers)
+    } catch (err) {
+        next(err)
+    }
+}
 
 
-module.exports = { createOperator, getOperator, getAllOperators, updateOperator, deleteOperator }
+
+module.exports = { createOperator, getOperator, getAllOperators, updateOperator, deleteOperator, operatorFieldOfficers }

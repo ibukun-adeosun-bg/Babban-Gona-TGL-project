@@ -52,23 +52,16 @@ module.exports = (sequelize, Sequelize) => {
         },
         governmentIdentificationID: {
             type: Sequelize.STRING,
-            allowNull: false
+            allowNull: false,
+            unique: true
         },
         governmentIdentificationType: {
             type: Sequelize.STRING,
-            allowNull: false,
-            validate: {
-                isIn: [["Voter's Card", "International Passport", "NIN Card", "Drivers' License"]]
-            }
+            allowNull: false
         },
         governmentIdentificationImage: {
             type: Sequelize.STRING,
             allowNull: false
-        },
-        username: {
-            type: Sequelize.STRING,
-            allowNull: false,
-            unique: true
         },
         operatorId: {
             type: Sequelize.STRING,
@@ -85,11 +78,6 @@ module.exports = (sequelize, Sequelize) => {
         FieldOfficer.belongsTo(model.state, {
             foreignKey: "state",
             onDelete: "cascade"
-        });
-
-        FieldOfficer.belongsTo(model.user, {
-            "foreignKey": "username",
-            "onDelete": "cascade"
         });
 
         FieldOfficer.belongsTo(model.operator, {

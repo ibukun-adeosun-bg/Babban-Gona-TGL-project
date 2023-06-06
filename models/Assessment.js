@@ -35,11 +35,6 @@ module.exports = (sequelize, Sequelize) => {
             foreignKey: "fieldOfficerId",
             onDelete: "cascade"
         })
-
-        Assessment.belongsTo(model.operator, {
-            foreignKey: "operatorId",
-            onDelete: "cascade"
-        })
     }
 
     return Assessment

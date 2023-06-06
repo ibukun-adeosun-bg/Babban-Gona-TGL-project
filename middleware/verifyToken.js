@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken")
 const { createError } = require("./error")
 
-const verifyToken = async (req, res, next) => {
+const verifyToken = (req, res, next) => {
     const authHeader = req.headers.authorization
     if (authHeader) {
         const token = authHeader.split(" ")[1]
@@ -19,18 +19,7 @@ const verifyToken = async (req, res, next) => {
     }
 }
 
-const verifyUser = async (req, res, next) => {
-    verifyToken(req, res, () => {
-        console.log(req.user.username, req.params.username);
-        if(req.user.username === req.params.username) {
-            next();
-        } else {
-            res.status(401).json("You are not Authorized to do this")
-        }
-    })
-}
-
-const verifyAdmin = async (req, res, next) => {
+const verifyAdmin = (req, res, next) => {
     verifyToken(req, res, () => {
         if(req.user.role === "Admin") {
             next();
@@ -40,7 +29,18 @@ const verifyAdmin = async (req, res, next) => {
     })
 }
 
-const verifyOperator = async (req, res, next) => {
+const verifyUser = (req, res, next) => {
+    verifyToken(req, res, () => {
+        console.log(req.user.userId, req.params.userId);
+        if(req.user.userId === req.params.userId) {
+            next();
+        } else {
+            res.status(401).json("You are not Authorized to do this")
+        }
+    })
+}
+
+const verifyOperator = (req, res, next) => {
     verifyToken(req, res, () => {
         if(req.user.role === "Operator") {
             next();
@@ -50,15 +50,5 @@ const verifyOperator = async (req, res, next) => {
     })
 }
 
-const verifyFieldOfficer = async (req, res, next) => {
-    verifyToken(req, res, () => {
-        if(req.user.role === "Field Officer") {
-            next();
-        } else {
-            res.status(401).json("You are not a Field Officer so you are not authorized to do this")
-        }
-    })
-}
 
-
-module.exports = { verifyToken, verifyUser, verifyAdmin, verifyOperator, verifyFieldOfficer }
+module.exports = { verifyToken, verifyUser, verifyAdmin, verifyOperator }

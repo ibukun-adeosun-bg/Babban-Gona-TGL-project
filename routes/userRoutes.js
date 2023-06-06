@@ -4,16 +4,16 @@ const { getUser, getAllUsers, updateUser, deleteUser } = require("../controllers
 const router = express.Router()
 
 //GET A USER INFORMATION
-router.get("/:username", verifyUser || verifyAdmin, getUser)
+router.get("/:userId", verifyUser || verifyAdmin, getUser)
 
 //GET ALL USERS
 router.get("/", verifyAdmin, getAllUsers)
 
 //UPDATE USER INFORMATION
-router.put("/:username", verifyUser || verifyAdmin, updateUser)
+router.put("/:userId", verifyUser || verifyAdmin, updateUser)
 
 //DELETE USER INFORMATION
-router.delete("/:username", verifyUser || verifyAdmin, deleteUser)
+router.delete("/:userId", verifyUser || verifyAdmin, deleteUser)
 
 
 module.exports = router

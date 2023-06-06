@@ -1,5 +1,4 @@
-const db = require("../config/dbConfig");
-const bcrypt = require("bcryptjs")
+const db = require("../config/dbConfig")
 const { states, stateLGAs } = require("../config/data")
 const { numberPattern, LengthPatternforBVN } = require("../middleware/validation")
 const { createError } = require("../middleware/error");
@@ -9,8 +8,12 @@ const createFieldOfficer = async (req, res, next) => {
         const state = await db.state.findOne({
             where: { state: req.body.state },
         });
-
-        if (!numberPattern.test(req.body.BVN)) {
+        const governmentIdentificationType = await db.governmentIdType.findOne({
+            where: { governmentIdentificationType: req.body.governmentIdentificationType}
+        })
+        if (governmentIdentificationType.isDisabled) {
+            next(createError(401, "This method of Identification has been disabled"))
+        } else if (!numberPattern.test(req.body.BVN)) {
             next(createError(403, "Invalid BVN, you can only input numbers"))
         } else if (!LengthPatternforBVN.test(req.body.BVN)) {
             next(createError(403, "Invalid Bank Verification Number, must only be 11 numbers"))
@@ -26,8 +29,6 @@ const createFieldOfficer = async (req, res, next) => {
             if (req.file) {
                 req.body.governmentIdentificationImage = req.file.filename
             }
-            const salt = bcrypt.genSaltSync(10)
-            const hashedBVN = bcrypt.hashSync(req.body.BVN, salt)
             const [lga, createdLga] = await db.lga.findOrCreate({
                 where: { localGovernmentArea: req.body.localGovernmentArea },
                 defaults: { state: req.body.state }
@@ -56,7 +57,7 @@ const createFieldOfficer = async (req, res, next) => {
                 lastName: req.body.lastName,
                 sex: req.body.sex,
                 dateOfBirth: req.body.dateOfBirth,
-                BVN: hashedBVN,
+                BVN: req.body.BVN,
                 state: req.body.state,
                 localGovernmentArea: req.body.localGovernmentArea,
                 Hub: req.body.Hub,
@@ -72,7 +73,7 @@ const createFieldOfficer = async (req, res, next) => {
                     res.status(200).json({
                         success: true,
                         status: "OK",
-                        message: "You are now a Field Officer on the Trust Group Leader Platform"
+                        message: "You have registered a new Field Officer on the Trust Group Leader platform"
                     })
                 }).catch(err => {
                     res.status(500).json(err)

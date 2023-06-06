@@ -54,19 +54,26 @@ const generateTestQuestions = async (req, res, next) => {
         const maxSession = await db.assessment.max('sessionId');
         console.log(maxSession);
         let newId = (maxSession ? parseInt(maxSession.split('-')[1]) + 1 : 1);
-        let sessionId = `SESSION-${padNumber(newId, 2)}`;
+        let sessionId = `SESSION-${padNumber(newId, 3)}`;
         while (await db.assessment.findOne({ where: { sessionId } })) {
             newId++;
-            sessionId = `SESSION-${padNumber(newId, 2)}`;
+            sessionId = `SESSION-${padNumber(newId, 3)}`;
         }
         //Save the assessment to the assessment database
-        const session = await db.assessment.create({
-            sessionId,
-            fieldOfficerId,
-            questions: selectedQuestions
-        });
-        selectedQuestions.push({ sessionId: session.sessionId })
-        res.status(200).json(selectedQuestions)
+        const isOfficerPresent = await db.assessment.findOne({
+            where: { fieldOfficerId: fieldOfficerId }
+        })
+        if (isOfficerPresent.submitted) {
+            next(createError(409, "This Field Officer has already submitted his/her response to an assessment"))
+        } else {
+            const session = await db.assessment.create({
+                sessionId,
+                fieldOfficerId,
+                questions: selectedQuestions
+            });
+            selectedQuestions.push({ sessionId: session.sessionId })
+            res.status(200).json(selectedQuestions)
+        }
     } catch (err) {
         next(err)
     }
@@ -97,8 +104,8 @@ const submitTestResponses = async (req, res, next) => {
             }
         }
         //Save the score and response into the database
-        if (assessment.submitted) {
-            next(createError(409, "A response has already been submitted for this assessment"))
+        if (assessment) {
+            next(createError(409, "An assessment has already been generated for this field officer"))
         } else {
             let submitted = true
             await db.assessment.update(
